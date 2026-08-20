@@ -1,4 +1,4 @@
-const pets = [
+let pets = [
   { id: 1, name: "Buddy", type: "Dog", image: "https://images.unsplash.com/photo-1517849845537-4d257902454a" },
   { id: 2, name: "Milo", type: "Cat", image: "https://images.unsplash.com/photo-1518791841217-8f162f1e1131" },
   { id: 3, name: "Rocky", type: "Dog", image: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b" },
@@ -9,4 +9,26 @@ const pets = [
 
 export async function GET() {
   return Response.json(pets);
+}
+
+export async function POST(request: Request) {
+  const data = await request.json();
+
+  if (!data.name || !data.type || !data.image) {
+    return Response.json(
+      { message: "All fields are required" },
+      { status: 400 }
+    );
+  }
+
+  const newPet = {
+    id: pets.length + 1,
+    name: data.name,
+    type: data.type,
+    image: data.image
+  };
+
+  pets.push(newPet);
+
+  return Response.json(newPet, { status: 201 });
 }
